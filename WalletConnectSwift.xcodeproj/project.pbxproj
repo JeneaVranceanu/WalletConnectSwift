@@ -616,8 +616,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 1.4.0;
+				kind = exactVersion;
+				version = 1.4.0;
 			};
 		};
 		55B7819524A614240036F8E5 /* XCRemoteSwiftPackageReference "Starscream" */ = {
