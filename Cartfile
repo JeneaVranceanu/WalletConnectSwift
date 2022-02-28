@@ -1,2 +1,2 @@
 github "krzyzanowskim/CryptoSwift" "1.4.0"
-github "daltoniam/Starscream" ~> 4.0.4
+github "https://github.com/JeneaVranceanu/Starscream.git" "master"
