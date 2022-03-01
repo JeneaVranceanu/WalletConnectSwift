@@ -76,7 +76,8 @@ class WebSocketConnection {
 }
 
 extension WebSocketConnection: WebSocketDelegate {
-    func didReceive(event: WebSocketEvent, client: WebSocket) {
+    
+    func didReceive(event: WebSocketEvent, client: WebSocketClient) {
         switch event {
         case .connected:
             DispatchQueue.main.sync {
@@ -99,7 +100,9 @@ extension WebSocketConnection: WebSocketDelegate {
             onTextReceive?(string)
         case .ping:
             LogService.shared.log("WC: <== ping")
-            LogService.shared.log("WC: ==> pong client.respondToPingWithPong: \(client.respondToPingWithPong == true)")
+            if let wsClient = client as? WebSocket {
+                LogService.shared.log("WC: ==> pong client.respondToPingWithPong: \(wsClient.respondToPingWithPong == true)")
+            }
             break
         case .pong:
             LogService.shared.log("WC: <== pong")
@@ -107,6 +110,9 @@ extension WebSocketConnection: WebSocketDelegate {
             LogService.shared.log("WC: <== reconnectSuggested") //TODO: Should we?
         case .binary, .viabilityChanged:
             break
+        case .peerClosed:
+            LogService.shared.log("WC: <== peerClosed")
+            didDisconnect(with: nil)
         }
     }
     
