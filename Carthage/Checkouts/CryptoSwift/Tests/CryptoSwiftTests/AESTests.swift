@@ -1,7 +1,7 @@
 //
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2021 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -213,6 +213,19 @@ final class AESTests: XCTestCase {
     print(encrypted.toHexString())
     XCTAssertEqual(encrypted, expected, "encryption failed")
     let decrypted = try! aes.decrypt(encrypted)
+    XCTAssertEqual(decrypted, plaintext, "decryption failed")
+  }
+
+  func testAESEncryptBigPCBC128() {
+    let key = "0123456789abcdef".bytes
+    let iv = "fedcba9876543210".bytes
+    let plaintext = "64 byte plaintext that will split into 4 chunks of 16 bytes each".bytes
+    let ciphertext: Array<UInt8> = [0xd6, 0x83, 0x7b, 0xb8, 0xfe, 0x1d, 0x62, 0xf7, 0x04, 0x69, 0xd1, 0xfd, 0x47, 0x06, 0x9c, 0x3d, 0xc0, 0x7c, 0xfe, 0xc9, 0x3d, 0xba, 0x35, 0x61, 0x40, 0xef, 0xe2, 0xac, 0xc6, 0x4c, 0x3d, 0x04, 0xbf, 0x4c, 0xa4, 0xf6, 0xfc, 0x09, 0xfc, 0x8c, 0x2e, 0x09, 0xd0, 0x74, 0x66, 0x2b, 0x8f, 0x02, 0x54, 0x01, 0x25, 0x76, 0x20, 0x88, 0x5e, 0x19, 0x3f, 0x74, 0xcd, 0x48, 0x29, 0xc7, 0xe1, 0xc6, 0xfb, 0xc9, 0xb9, 0xcf, 0xcd, 0xf8, 0xeb, 0x42, 0xbc, 0x0f, 0xc5, 0x73, 0x96, 0xe4, 0xf8, 0x0f]
+
+    let aes = try! AES(key: key, blockMode: PCBC(iv: iv), padding: .pkcs7)
+    let encrypted = try! aes.encrypt(plaintext)
+    XCTAssertEqual(encrypted, ciphertext, "encryption failed")
+    let decrypted = try! aes.decrypt(ciphertext)
     XCTAssertEqual(decrypted, plaintext, "decryption failed")
   }
 
